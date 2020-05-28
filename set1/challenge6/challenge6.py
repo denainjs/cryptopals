@@ -3,9 +3,6 @@ import sys
 from itertools import zip_longest
 import base64
 
-sys.path.insert(1, '../challenge1/')
-from challenge1 import b64_to_text
-
 sys.path.insert(3, '../challenge3/')
 from challenge3 import decrypt, chi_square, ref_text
 
@@ -79,7 +76,7 @@ def reassemble_blocks(l):
 
 
 if __name__ == "__main__":
-    
+
     print("test hamming")
     s1 = b"this is a test"
     s2 = b"wokka wokka!!!"
@@ -91,7 +88,7 @@ if __name__ == "__main__":
     print("test vigenere")
 
     print("    fetch data")
-    data = open("text.txt", 'r')
+    data = open("ciphertext.txt", 'r')
     ciphertext = base64.b64decode(data.read())
 
     print("    determine keysize")
