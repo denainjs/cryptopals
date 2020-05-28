@@ -5,9 +5,6 @@ import string      # definitions of ascii printable chars
 from collections import defaultdict     # fast counting
 import sys 
 
-sys.path.insert(1, '../challenge1/')
-from challenge1 import hex_to_b64
-
 # 'a single character' means a single byte, ie a number between 1 and 256 (to which you can apply ^)
 
 ref = open("ref.txt", 'r')
@@ -37,8 +34,7 @@ def char_freq(ref_text):
 def decrypt(s_hex, key):
     s_bin = binascii.unhexlify(s_hex)
     d_bin = bytes(x^key for x in s_bin)
-    d_hex = binascii.hexlify(d_bin).decode()
-    d_b64 = hex_to_b64(d_hex)
+    d_b64 = binascii.b2a_base64(d_bin)    
     text = base64.b64decode(d_b64).decode(encoding='utf-8',errors="ignore") # if there is an error, we know that the key is not the one we want
     return text
 

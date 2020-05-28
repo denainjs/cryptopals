@@ -22,26 +22,21 @@ def hamming_int(n1, n2):
     return res
 
 def hamming_str(s1, s2):
-    """hamming distance between strings s1 and s2
+    """hamming distance between binary strings s1 and s2
     ie number of bits that differ
     we assume that both strings have the same length
     """
     # confirm that strings have the same length
     assert len(s1) == len(s2)
-    
-    # convert to list of ints
-    s1_ints = [int(j) for j in binascii.a2b_qp(s1)]
-    s2_ints = [int(j) for j in binascii.a2b_qp(s2)]
 
     # add hamming distance for all ints
     res = 0
-    for (n1, n2) in zip(s1_ints, s2_ints):
+    for (n1, n2) in zip(list(s1), list(s2)):
         res += hamming_int(n1, n2)
     return res
 
 def normalized_edit_distance(keysize, ciphertext):
-    s = ciphertext.decode() # convert b64 to text to be able to apply hamming_str
-    chunks = [s[i:i+keysize] for i in range(0, len(s), keysize)]
+    chunks = [ciphertext[i:i+keysize] for i in range(0, len(ciphertext), keysize)]
     distances = []
     while True:
         try:
@@ -70,32 +65,35 @@ def decode_transposed_blocks(keysize, ciphertext, ranks):
         return l
 
 def reassemble_blocks(l):
-        plaintext = ""
-        idx = 0
-        while True:
-            try:
-                for k in range(keysize):
-                    plaintext += l[k][idx]
-                idx += 1
-            except Exception as e:
-                break
-        return(plaintext)
+    keysize = len(l)
+    plaintext = ""
+    idx = 0
+    while True:
+        try:
+            for k in range(keysize):
+                plaintext += l[k][idx]
+            idx += 1
+        except Exception as e:
+            break
+    return(plaintext)
 
 
 if __name__ == "__main__":
+    
     print("test hamming")
-    s1 = "this is a test"
-    s2 = "wokka wokka!!!"
+    s1 = b"this is a test"
+    s2 = b"wokka wokka!!!"
     print("    string 1: ", s1)
     print("    string 2: ", s2)
     print("    computed hamming distance: ", hamming_str(s1, s2))
     print("    true hamming distance: ", 37)
 
     print("test vigenere")
+
     print("    fetch data")
     data = open("text.txt", 'r')
     ciphertext = base64.b64decode(data.read())
-    
+
     print("    determine keysize")
     ord = ordered_keysizes(ciphertext)
     keysize = ord[0] # the keysize with the smallest normalized edit distance is the best
@@ -104,6 +102,7 @@ if __name__ == "__main__":
     ranks = keysize * [0]
     ranks[22] = 1 # turns out the best chi square value is not always the correct one: for transposed block 22 the runner up is better
     l = decode_transposed_blocks(keysize, ciphertext, ranks)
+
     print("    reassemble text\n")
     plaintext = reassemble_blocks(l)
     print(plaintext)
