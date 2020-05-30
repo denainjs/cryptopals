@@ -3,9 +3,6 @@ import sys
 from itertools import zip_longest
 import base64
 
-sys.path.insert(3, '../challenge3/')
-from challenge3 import decrypt, chi_square, ref_text
-
 def hamming_int(n1, n2):
     """hamming distance between the strings of bits corresponding to n1 and n2
     """
@@ -46,7 +43,7 @@ def normalized_edit_distance(keysize, ciphertext):
     return sum(distances)/len(distances)
 
 def ordered_keysizes(s_b64):
-    """order keysizes by normalized edit distance between first and second blocks
+    """order keysizes by normalized edit distance
     """
     return sorted(list(range(2,40)), key=lambda k:normalized_edit_distance(k, s_b64))
     
@@ -76,6 +73,8 @@ def reassemble_blocks(l):
 
 
 if __name__ == "__main__":
+    sys.path.insert(3, '../challenge3/')
+    from challenge3 import decrypt, chi_square, ref_text
 
     print("test hamming")
     s1 = b"this is a test"
