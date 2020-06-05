@@ -24,8 +24,7 @@ def unpad(b, blocksize):
         return b
 
 
-def aes_cbc_encrypt(plaintext, key, iv):
-    blocksize = 16
+def aes_cbc_encrypt(plaintext, key, iv, blocksize = 16):
     cipher = AES.new(key, AES.MODE_ECB) # ok to use ECB mode since there's only one block
     to_xor = iv
     ciphertext = b""
@@ -38,8 +37,7 @@ def aes_cbc_encrypt(plaintext, key, iv):
         to_xor = ciphertext_block
     return ciphertext
 
-def aes_cbc_decrypt(ciphertext, key, iv):
-    blocksize = 16
+def aes_cbc_decrypt(ciphertext, key, iv, blocksize = 16):
     cipher = AES.new(key, AES.MODE_ECB) # ok to use ECB mode since there's only one block
     
     to_xor = iv
@@ -57,7 +55,8 @@ if __name__ == "__main__":
     f = open("ciphertext.txt", 'r')
     ciphertext = base64.b64decode(f.read())
     key = b"YELLOW SUBMARINE"
-    iv = 16 * chr(0).encode()
+    blocksize = 16
+    iv = blocksize * chr(0).encode()
 
     print("iv: ", iv)
     print("ciphertext: ", ciphertext)
