@@ -10,12 +10,12 @@ def xor(s1, s2):
     """
     return bytes(a^b for a,b in zip(s1,s2))
 
-def pad(b, blocksize):
+def pad(b, blocksize=16):
     remaining_bits = blocksize - len(b) % blocksize
     padding = (remaining_bits * chr(remaining_bits)).encode()
     return(b + padding)
 
-def unpad(b, blocksize):
+def unpad(b, blocksize=16):
     pad_size = b[-1]
     padding = b[-pad_size:]
     if padding == bytes(pad_size * [pad_size]):
