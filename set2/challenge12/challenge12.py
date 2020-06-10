@@ -41,5 +41,18 @@ if __name__ == "__main__":
     print("mode:", mode)
 
     # 1 byte short input block
+    # encrypt buffer will append UNKNOWN_STRING to the right of this
+    # first block of the resulting string to_encrypt = shortened_block + first byte of UNKNOWN_STRING
+    shortened_block = (blocksize-1) * b"A"
 
-    # 
+    # create dictionary of possible first blocks of to_encrypt
+    dic = {}
+    for i in range(256): # all ascii characters
+        fst_block_plain = shortened_block + chr(i).encode()
+        fst_block_cipher = encrypt_buffer(fst_block_plain)[0:blocksize]
+        dic[fst_block_cipher] = i
+    
+    # actual first ciphertext block for shortened_block
+    fst_block_cipher = encrypt_buffer(shortened_block)[0:blocksize]
+    print("first byte:", dic[fst_block_cipher])
+    print("corresponding character:", chr(dic[fst_block_cipher]))
